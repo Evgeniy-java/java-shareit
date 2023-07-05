@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.user.User;
 
 /**
  * TODO Sprint add-controllers.
@@ -21,5 +22,5 @@ public class Item {
     private String owner;
     /*если вещь была создана по запросу другого пользователя, то в этом
       поле будет храниться ссылка на соответствующий запрос*/
-    private String request;
+    private User request;
 }
