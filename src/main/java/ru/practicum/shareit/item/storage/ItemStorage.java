@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface ItemStorage {
     Item add(Item item);
+
     Item update(long userId, Item item);
+
     Item getById(long itemId);
+
     List<Item> getOwnerItems(long userId);
+
     List<Item> searchItems(String text);
-    boolean itemExists(long id);
 }

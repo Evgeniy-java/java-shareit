@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@Builder
 public class Item {
     //уникальный идентификатор вещи.
     private Long id;

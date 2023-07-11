@@ -4,9 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.exception.ConflictException;
+import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.IncorrectParameterException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ConflictException;
 
 
 @RestControllerAdvice
@@ -22,7 +23,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handlerUserNotFoundException(final NotFoundException e) {
+    public ErrorResponse handlerNotFoundException(final NotFoundException e) {
         return new ErrorResponse(
                 e.getMessage()
         );
@@ -30,7 +31,15 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handlerUserValidationException(final ConflictException e) {
+    public ErrorResponse handlerConflictException(final ConflictException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handlerForbiddenException(final ForbiddenException e) {
         return new ErrorResponse(
                 e.getMessage()
         );

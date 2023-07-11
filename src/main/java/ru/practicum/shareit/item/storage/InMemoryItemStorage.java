@@ -50,16 +50,14 @@ public class InMemoryItemStorage implements ItemStorage {
 
     @Override
     public List<Item> searchItems(String text) {
+        System.out.println("-------------------");
+        System.out.println(items.toString());
+        System.out.println("-------------------");
+
         return items.values().stream()
                 .filter(item -> (item.getDescription().toLowerCase().contains(text.toLowerCase())
-                        || item.getName().toLowerCase().contains(text.toLowerCase())))
-                .filter(Item::getAvailable)
+                        || item.getName().toLowerCase().contains(text.toLowerCase()))
+                        && item.getAvailable())
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public boolean itemExists(long id) {
-        return items.containsKey(id);
-    }
-
 }

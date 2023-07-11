@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -12,6 +13,7 @@ import ru.practicum.shareit.item.storage.ItemStorage;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +27,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto add(Long userId, ItemDto itemDto) {
         if (!userStorage.userExists(userId)) {
-            log.debug("Некорректный id: {} пользователя", userId);
-            throw new NotFoundException(String.format("Некорректный id: %s пользователя", userId));
+            log.debug("Пользователь с id: {} не найден", userId);
+            throw new NotFoundException(String.format("Пользователь с id: %s не найден", userId));
         }
         User user = userStorage.getUserById(userId);
         Item item = ItemMapper.toItem(itemDto);
@@ -41,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemStorage.getById(itemId);
 
         if (!item.getOwner().getId().equals(userId)) {
-            throw new NotFoundException("Чужую вещ нельзя редактировать");
+            throw new ForbiddenException("Чужую вещ запрещено редактировать");
         }
 
         if (itemDto.getName() != null) {
@@ -54,26 +56,24 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(itemDto.getAvailable());
         }
 
-        itemStorage.update(userId, item);
-
         return ItemMapper.toItemDto(item);
     }
 
     @Override
     public ItemDto getItemById(Long itemId) {
-        Item item = itemStorage.getById(itemId);
-
-        return ItemMapper.toItemDto(item);
+        return ItemMapper.toItemDto(itemStorage.getById(itemId));
     }
 
     @Override
     public List<ItemDto> getOwnerItems(Long userId) {
-        List<Item> items = itemStorage.getOwnerItems(userId);
-        return ItemMapper.itemToDto(items);
+        return ItemMapper.itemToDto(itemStorage.getOwnerItems(userId));
     }
 
     @Override
     public List<ItemDto> searchItems(String text) {
+        if (text.isBlank()) {
+            return new ArrayList<>();
+        }
         return itemStorage.searchItems(text).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());

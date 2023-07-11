@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.*;
+import ru.practicum.shareit.request.ItemRequest;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,8 +13,8 @@ import javax.validation.constraints.Size;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
-public class ItemDto{
+@Builder
+public class ItemDto {
     private long id;
 
     @NotBlank(message = "Не заполнено название вещи")
@@ -26,5 +27,5 @@ public class ItemDto{
     @NotNull(message = "Не проставлен статус вещи")
     private Boolean available;
 
-    private Long request;
+    private ItemRequest request;
 }
