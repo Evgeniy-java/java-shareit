@@ -31,7 +31,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(String.format("Пользователь с id: %s не найден", userId));
         }
         User user = userStorage.getUserById(userId);
-        Item item = ItemMapper.toItem(itemDto);
+        Item item = ItemMapper.toItem(itemDto, user);
 
         item.setOwner(user);
 
