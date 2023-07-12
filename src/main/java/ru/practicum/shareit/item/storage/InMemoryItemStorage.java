@@ -28,9 +28,9 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public Item update(long userId, Item item) {
-        items.put(userId, item);
-        log.debug("Данные по вещи: {} обновлены пользователем с id: {}", item, userId);
+    public Item update(Item item) {
+        items.put(item.getId(), item);
+        log.debug("Данные по вещи: {} обновлены пользователем с id: {}", item, item.getId());
         return item;
     }
 

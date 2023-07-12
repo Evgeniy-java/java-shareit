@@ -2,10 +2,13 @@ package ru.practicum.shareit.user.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ConflictException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -38,12 +41,26 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User update(User newUser) {
-        if (!users.containsKey(newUser.getId())) {
-            throw new NotFoundException(String.format("Не найден пользователь с id: %s", newUser.getId()));
+    public User update(User user, Long userId) {
+        User updateUser = users.get(userId);
+
+        String name = user.getName();
+        String email = user.getEmail();
+
+        updateUser.setName(name != null && !name.isBlank() ? name : updateUser.getName());
+
+        if (email != null && !email.isBlank()) {
+            boolean emailExist = getAllUsers().stream()
+                    .filter(u -> !u.getId().equals(userId))
+                    .anyMatch(u -> email.equals(u.getEmail()));
+            if (emailExist) {
+                throw new ConflictException(String.format("email: %s уже существует", email));
+            }
+            updateUser.setEmail(email);
         }
-        users.put(newUser.getId(), newUser);
-        return newUser;
+
+        users.put(userId, updateUser);
+        return updateUser;
     }
 
     @Override

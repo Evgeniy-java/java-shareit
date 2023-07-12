@@ -25,8 +25,8 @@ public class UserServiceImpl implements UserService {
         if (userStorage.isExistEmail(userDto.getEmail())) {
             throw new ConflictException(String.format("Пользователь с email: %s уже существует", userDto.getEmail()));
         }
-        userDto.setId(userStorage.add(newUser).getId());
-        return userDto;
+
+        return UserMapper.toUserDto(userStorage.add(newUser));
     }
 
     @Override
@@ -46,24 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto userDto, Long userId) {
-        User updateUser = userStorage.getUserById(userId);
-
-        String name = userDto.getName();
-        String email = userDto.getEmail();
-
-        updateUser.setName(name != null && !name.isBlank() ? name : updateUser.getName());
-
-        if (email != null && !email.isBlank()) {
-            boolean emailExist = userStorage.getAllUsers().stream()
-                    .filter(u -> !u.getId().equals(userId))
-                    .anyMatch(u -> email.equals(u.getEmail()));
-            if (emailExist) {
-                throw new ConflictException(String.format("email: %s уже существует", email));
-            }
-            updateUser.setEmail(email);
-        }
-        userStorage.update(updateUser);
-        return UserMapper.toUserDto(updateUser);
+        User user = UserMapper.toUser(userDto);
+        return UserMapper.toUserDto(userStorage.update(user, userId));
     }
 
     @Override
