@@ -42,6 +42,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto update(Long userId, Long itemId, ItemDto itemDto) {
         Item item = itemStorage.getById(itemId);
 
+        if (item == null) {
+            throw new NotFoundException(String.format("Вещ с id: %s не найдена", itemId));
+        }
+
         if (!item.getOwner().getId().equals(userId)) {
             throw new ForbiddenException("Чужую вещ запрещено редактировать");
         }
