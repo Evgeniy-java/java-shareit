@@ -1,12 +1,6 @@
-package ru.practicum.shareit.user.dto;
+package ru.practicum.shareit.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import lombok.*;
 
 /**
  * TODO Sprint add-controllers.
@@ -15,15 +9,12 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class UserDto {
+public class User {
     //уникальный идентификатор пользователя.
     private Long id;
     //имя или логин пользователя.
-    @NotBlank(message = "Не заполнено имя пользователя")
     private String name;
     /*адрес электронной почты (учтите, что два пользователя не могут
       иметь одинаковый адрес электронной почты).*/
-    @NotBlank(message = "Email не заполнен")
-    @Email(message = "Некорректный email")
     private String email;
 }
