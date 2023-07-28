@@ -27,9 +27,9 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto update(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
+    public ItemDto update(@RequestBody ItemDto itemDto,
                           @PathVariable("itemId") @Positive Long itemId,
-                          @RequestBody ItemDto itemDto) {
+                          @RequestHeader("X-Sharer-User-Id") @Positive Long userId) {
         log.debug("Получен Patch /items/{itemId} запрос " +
                 "на обновление вещи: {} пользователем с id: {}", itemDto, userId);
         return itemService.update(itemDto, itemId, userId);
@@ -37,7 +37,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable Long itemId,
-                            @RequestHeader("X-Sharer-User-Id") Long userId) {
+                               @RequestHeader("X-Sharer-User-Id") Long userId) {
         log.debug("Получен Get /items/{itemId} запрос " +
                 "на получение вещи по id: {}", itemId);
         return itemService.getItemById(itemId, userId);
@@ -59,7 +59,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") Long userId,
-                                    @Valid @RequestBody CommentDto commentDto) {
+                                 @Valid @RequestBody CommentDto commentDto) {
         log.info("ItemController: POST createComment, userId = {}", userId);
         return itemService.addComment(itemId, userId, commentDto);
     }
