@@ -1,31 +1,33 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.*;
-import ru.practicum.shareit.request.ItemRequest;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import ru.practicum.shareit.booking.dto.BookingBriefDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class ItemDto {
-    private long id;
+    private Long id;
 
-    @NotBlank(message = "Не заполнено название вещи")
+    @NotBlank
     private String name;
 
-    @NotBlank(message = "Не заполнено описание вещи")
-    @Size(max = 240, message = "В описании не более 240 символов")
+    @NotBlank
     private String description;
 
-    @NotNull(message = "Не проставлен статус вещи")
+    @NotNull
     private Boolean available;
 
-    private ItemRequest request;
+    private BookingBriefDto lastBooking;
+
+    private BookingBriefDto nextBooking;
+
+    private List<CommentDto> comments;
 }

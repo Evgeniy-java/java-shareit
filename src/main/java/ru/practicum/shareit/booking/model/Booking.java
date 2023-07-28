@@ -1,42 +1,41 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
-@Data
-@RequiredArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "booking")
+@Table(name = "bookings", schema = "public")
 public class Booking {
-    //уникальный идентификатор бронирования.
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "booking_id")
-    private long id;
-    //дата и время начала бронирования.
-    @Column(name = "start_date", nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate start;
-    //дата и время конца бронирования.
-    @Column(name = "end_date", nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate end;
-    //вещь, которую пользователь бронирует.
+    @Column(name = "booking_id", length = 255)
+    private Long id;
+
+    @Column(name = "start_date")
+    private LocalDateTime start;
+
+    @Column(name = "end_date")
+    private LocalDateTime end;
+
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private long itemId;
-    //пользователь, который осуществляет бронирование.
-    @ManyToOne
-    @JoinColumn(name = "booker_id", referencedColumnName = "user_id")
-    private long bookerId;
-    //статус бронирования
+    private Item item;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "booker_id")
+    private User booker;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private BookingStatus status;
 }
